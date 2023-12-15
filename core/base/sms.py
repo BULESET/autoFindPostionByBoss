@@ -11,7 +11,7 @@ from abc import ABCMeta, abstractmethod
 class SMS(metaclass=ABCMeta):
 
     @abstractmethod
-    def getSMS(self, login_from):
+    def getSmsCode(self, platform_type, phone_number):
         pass
 
 
