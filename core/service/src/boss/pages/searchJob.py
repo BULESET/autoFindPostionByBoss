@@ -1,6 +1,11 @@
-# @Time :       1.11.23 1:56 下午
+# @Time :       3.1.24 9:54 下午
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
-# @File :       __init__.py.py
+# @File :       searchJob.py
 # @Project :    PositionRecommend
 # @Description:
+
+
+class SearchJob(object):
+    pass
+
