@@ -36,6 +36,9 @@ class LoginPageOperation(object):
     def login_by_qr_code(self):
         self.page.goto(url)
         self.page.click(ApplyForJobPage.qr_code_login_button)
+        self.page.wait_for_timeout(3000)
+        self.page.screenshot(
+            path='ss.png')
 
     # TODO 此处需要接收微信登录的二维码并发送到指定微信、钉钉、企业微信、飞书、邮件、或者微信工作号等平台,此处需要再处理，目前没有处理
     def login_by_wechat(self):
@@ -52,4 +55,4 @@ class LoginPageOperation(object):
 
 if __name__ == '__main__':
     L = LoginPageOperation()
-    L.login_by_phone('15009556640')
+    L.login_by_qr_code()
