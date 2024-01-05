@@ -1,11 +1,11 @@
 # @Time :       4.1.24 2:46 下午
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
-# @File :       searchJob.py
+# @File :       search.py
 # @Project :    PositionRecommend
 # @Description:
 
-from core.service.src.boss.pages.searchJob import SearchJob
+from core.service.src.boss.pages.search import Search
 from common.driver import driver
 
 url = 'https://www.zhipin.com/web/geek/job'
@@ -17,10 +17,10 @@ class SearchJobPageOperation(object):
     def __init__(self, searchJobPageUrl):
         self.url = searchJobPageUrl
 
-    def search(self, condition: dict, is_online=False):
+    def search(self):
         self.page.goto(self.url)
         self.page.wait_for_timeout(4000)
-        self.click_job_card(1)
+        print(Search().search_job.search_box)
 
     def find_job_name(self, job_name: str) -> list:
         """
@@ -29,7 +29,7 @@ class SearchJobPageOperation(object):
         :return:
         """
         job_name_list = []
-        job_name_result_list = self.page.query_selector_all(SearchJob.job_name)
+        job_name_result_list = self.page.query_selector_all(Search().search_job.job_name)
         for index, value in enumerate(job_name_result_list):
             if job_name == value.text_content():
                 job_name_list.append(index)
@@ -43,7 +43,7 @@ class SearchJobPageOperation(object):
         :return:
         """
         job_salary_list = []
-        job_salary_result_list = self.page.query_selector_all(SearchJob.job_salary)
+        job_salary_result_list = self.page.query_selector_all(Search().search_job.job_salary)
         for index, salary in enumerate(job_salary_result_list):
             if job_salary == salary.text_content():
                 job_salary_list.append(index)
@@ -57,7 +57,7 @@ class SearchJobPageOperation(object):
         :return:
         """
         job_area_list = []
-        job_salary_result_list = self.page.query_selector_all(SearchJob.job_area)
+        job_salary_result_list = self.page.query_selector_all(Search().search_job.job_area)
         for index, area in enumerate(job_salary_result_list):
             if job_area == area.text_content():
                 job_area_list.append(index)
@@ -69,7 +69,7 @@ class SearchJobPageOperation(object):
         :return:
         """
         hr_online_list = []
-        hr_online_result_list = self.page.query_selector_all(SearchJob.hr_online)
+        hr_online_result_list = self.page.query_selector_all(Search().search_job.hr_online)
         for index, online_result in enumerate(hr_online_result_list):
             if "在线" == online_result.text_content():
                 hr_online_list.append(index)
@@ -82,7 +82,7 @@ class SearchJobPageOperation(object):
         :return:
         """
         company_name_list = []
-        company_name_result_list = self.page.query_selector_all(SearchJob.company_name)
+        company_name_result_list = self.page.query_selector_all(Search().search_job.company_name)
         for index, company_name_result in enumerate(company_name_result_list):
             if company_name == company_name_result.text_content():
                 company_name_list.append(index)
@@ -95,7 +95,7 @@ class SearchJobPageOperation(object):
         :return:
         """
         city_name_list = []
-        city_name_result_list = self.page.query_selector_all(SearchJob.city_list)
+        city_name_result_list = self.page.query_selector_all(Search().search_job.city_list)
         for index, city_name_result in enumerate(city_name_result_list):
             if city_name == city_name_result.text_content():
                 city_name_list.append(index)
@@ -108,7 +108,7 @@ class SearchJobPageOperation(object):
         :return:
         """
         rea_of_city_list = []
-        area_of_city_result_list = self.page.query_selector_all(SearchJob.area_of_city)
+        area_of_city_result_list = self.page.query_selector_all(Search().search_job.area_of_city)
         for index, area_of_city_result in enumerate(area_of_city_result_list):
             if area_name == area_of_city_result.text_content():
                 rea_of_city_list.append(index)
@@ -130,7 +130,7 @@ class SearchJobPageOperation(object):
 
         if isinstance(index, (int, str)):
             index = '[' + str(index) + ']'
-            element = SearchJob.search_result_list + '/li' + index
+            element = Search().search_job.search_result_list + '/li' + index
             self.page.click(element)
             self.page.wait_for_timeout(pause_time)
             return self.page.url, index
@@ -138,3 +138,4 @@ class SearchJobPageOperation(object):
 
 if __name__ == '__main__':
     S = SearchJobPageOperation(url)
+    S.search()

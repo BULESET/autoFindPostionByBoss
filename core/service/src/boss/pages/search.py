@@ -1,7 +1,7 @@
 # @Time :       3.1.24 9:54 下午
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
-# @File :       searchJob.py
+# @File :       search.py
 # @Project :    PositionRecommend
 # @Description:
 
@@ -26,3 +26,22 @@ class SearchCondition(object):
 
 class SearchJob(SearchCondition, SearchResultList):
     pass
+
+
+class SearchCompany(object):
+    pass
+
+
+class Search(SearchJob, SearchCompany):
+
+    @property
+    def search_job(self):
+        return SearchJob
+
+    @property
+    def search_company(self):
+        return SearchCompany
+
+
+if __name__ == '__main__':
+    print(Search().search_job.search_box)
