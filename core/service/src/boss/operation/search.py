@@ -7,6 +7,7 @@
 
 from core.service.src.boss.pages.search import Search
 from common.driver import driver
+import json
 
 url = 'https://www.zhipin.com/web/geek/job'
 
@@ -20,7 +21,7 @@ class SearchJobPageOperation(object):
     def search(self):
         self.page.goto(self.url)
         self.page.wait_for_timeout(4000)
-        print(Search().search_job.search_box)
+        # print(Search().search_job.search_box)
 
     def find_job_name(self, job_name: str) -> list:
         """
@@ -114,6 +115,9 @@ class SearchJobPageOperation(object):
                 rea_of_city_list.append(index)
         return rea_of_city_list
 
+    def find_page_count(self):
+        return len(self.page.query_selector_all(Search().search_job.search_page))
+
     def click_city(self):
         pass
 
@@ -134,6 +138,20 @@ class SearchJobPageOperation(object):
             self.page.click(element)
             self.page.wait_for_timeout(pause_time)
             return self.page.url, index
+
+    # def on_response(self, response):
+    #     if 'https://facade.upfluence.co/api/v1/influencers/' in response.url:
+    #         data = json.loads(response.body())
+
+    # def get_job_list_count(self, url):
+    #     self.page.on('response', on_response)
+    #     if url in self.page.url:
+    #         data = json.loads(response.body())
+    #         instagrams = data['instagrams']
+    #         username = instagrams[0]['username']
+    #         usernames.append(username)
+    #         print(set(usernames))
+    #         pass
 
 
 if __name__ == '__main__':

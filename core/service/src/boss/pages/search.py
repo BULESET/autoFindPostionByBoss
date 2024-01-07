@@ -14,6 +14,7 @@ class SearchResultList(object):
     hr_online = '//div[@class="page-job-inner"]//div[@class="page-job-content clearfix"]//div[@class="job-list-wrapper"]//div[@class="search-job-result"]//div[@class="job-card-body clearfix"]//div[@class="job-info clearfix"]//span[@class="boss-online-tag"]'
     company_name = '//div[@class="page-job-inner"]//div[@class="page-job-content clearfix"]//div[@class="job-list-wrapper"]//div[@class="search-job-result"]//div[@class="job-card-body clearfix"]//div[@class="job-card-right"]//div[@class="company-info"]//h3[@class="company-name"]//a'
     company_tag_list = '//div[@class="page-job-inner"]//div[@class="page-job-content clearfix"]//div[@class="job-list-wrapper"]//div[@class="search-job-result"]//div[@class="job-card-body clearfix"]//div[@class="job-card-right"]//div[@class="company-info"]//ul[@class="company-tag-list"]'
+    search_page = '//*[@id="wrap"]/div[2]/div[2]/div/div[1]/div[1]/div/div/div/a'
 
 
 class SearchCondition(object):
