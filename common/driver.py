@@ -6,14 +6,16 @@
 # @Description:
 
 from playwright.sync_api import sync_playwright
+from loguru import logger
+
+
+# from playwright.async_api import async_playwright
 
 
 def driver():
     playwright = sync_playwright().start()
     browser = playwright.chromium.launch(headless=False)
-    content = browser.new_context()
-    page = content.new_page()
-    return page
+    return browser
 
 
 if __name__ == '__main__':

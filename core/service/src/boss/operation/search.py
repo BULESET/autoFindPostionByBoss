@@ -4,156 +4,122 @@
 # @File :       search.py
 # @Project :    PositionRecommend
 # @Description:
+import time
 
 from core.service.src.boss.pages.search import Search
 from common.driver import driver
-import json
+from core.service.src.boss.utils.tools import checkoutLoginFile
+from core.service.src.boss.operation.login import LoginPageOperation
+from core.service.src.boss.operation.jobDetail import JobDetailPageOperation
+from loguru import logger
+import copy
 
-url = 'https://www.zhipin.com/web/geek/job'
+import os
 
 
 class SearchJobPageOperation(object):
-    page = driver()
+    url = 'https://www.zhipin.com/web/geek/job'
+    current_path = os.path.dirname(os.path.abspath('.'))
+    tmp_path = os.path.join(current_path, 'tmpFile', 'login_data.json')
 
-    def __init__(self, searchJobPageUrl):
-        self.url = searchJobPageUrl
+    def __init__(self, browser, content=None, page=None):
+        if not checkoutLoginFile():
+            self.login_instance = LoginPageOperation(browser)
+            self.login_instance.login_by_qr_code()
+            self.browser = browser
+            self.content = self.login_instance.content
+            self.page = self.login_instance.page
+            self.goToSearchPage()
 
-    def search(self):
-        self.page.goto(self.url)
-        self.page.wait_for_timeout(4000)
-        # print(Search().search_job.search_box)
+        else:
+            if not browser.contexts:
+                self.browser = browser
+                self.content = browser.new_context(storage_state=self.tmp_path)
+                self.page = self.content.new_page()
+                self.goToSearchPage()
+            else:
+                self.browser = browser
+                self.content = content
+                self.page = page
 
-    def find_job_name(self, job_name: str) -> list:
-        """
-        返回的列表页中寻找工作名称
-        :param job_name:
-        :return:
-        """
-        job_name_list = []
-        job_name_result_list = self.page.query_selector_all(Search().search_job.job_name)
-        for index, value in enumerate(job_name_result_list):
-            if job_name == value.text_content():
-                job_name_list.append(index)
+    def goToSearchPage(self):
+        self.page.goto(url=self.url)
+        self.page.wait_for_url(self.url)
 
-        return job_name_result_list
+    def searchJob(self, job_name):
+        self.page.fill(Search().search_job.search_box, job_name)
+        self.page.click(Search().search_job.search_button)
 
-    def find_job_salary(self, job_salary: str) -> list:
-        """
-        返回的列表页中寻找工作范围
-        :param job_salary:
-        :return:
-        """
-        job_salary_list = []
-        job_salary_result_list = self.page.query_selector_all(Search().search_job.job_salary)
-        for index, salary in enumerate(job_salary_result_list):
-            if job_salary == salary.text_content():
-                job_salary_list.append(index)
-
-        return job_salary_list
-
-    def find_job_area(self, job_area: str) -> list:
-        """
-        返回的列表页中查找工作区域
-        :param job_area:
-        :return:
-        """
-        job_area_list = []
-        job_salary_result_list = self.page.query_selector_all(Search().search_job.job_area)
-        for index, area in enumerate(job_salary_result_list):
-            if job_area == area.text_content():
-                job_area_list.append(index)
-        return job_area_list
-
-    def find_hr_online(self) -> list:
-        """
-        返回的列表页中寻找hr在线数据
-        :return:
-        """
-        hr_online_list = []
+    def chatWithOnLineHR(self):
+        logger.info('【开始遍历完在线数据】')
         hr_online_result_list = self.page.query_selector_all(Search().search_job.hr_online)
-        for index, online_result in enumerate(hr_online_result_list):
-            if "在线" == online_result.text_content():
-                hr_online_list.append(index)
-        return hr_online_list
+        if hr_online_result_list:
+            for on_line_hr in hr_online_result_list:
+                with self.content.expect_page() as new_page_info:
+                    on_line_hr.click()
+                    job_detail_page = new_page_info.value
+                    job_detail_page.wait_for_load_state()
+                    JobDetailPageOperation(self.browser, self.content, job_detail_page).chatWithHRAtNow(
+                        chatWithHRAgain=False)
+                time.sleep(3)
+                break
+            logger.info('【已经遍历完在线数据】')
+            return True
+        else:
+            logger.info('【已经遍历完在线数据】')
+            return True
 
-    def find_company_name(self, company_name: str) -> list:
-        """
-        返回的列表页中寻找工作名称
-        :param company_name:
-        :return:
-        """
-        company_name_list = []
-        company_name_result_list = self.page.query_selector_all(Search().search_job.company_name)
-        for index, company_name_result in enumerate(company_name_result_list):
-            if company_name == company_name_result.text_content():
-                company_name_list.append(index)
-        return company_name_list
+    def goToNextSearchPage(self):
+        current_url = copy.deepcopy(self.page.url)
+        logger.info('【点击下一页】')
+        if self.page.locator(Search().search_job.next_page_button).is_visible():
+            logger.info('【下一页按钮可见】')
+            logger.info('【点击下一页】')
+            self.page.locator(Search().search_job.next_page_button).click()
+            logger.info(f'【当前页面UR】L:{self.page.url}')
+            logger.info('【点击完成】')
+            if current_url == self.page.url:
+                logger.info('【已经到头啦】')
+                return False
+            return True
 
-    def find_city(self, city_name: str) -> list:
-        """
-        顶部查询城市
-        :param city_name:
-        :return:
-        """
-        city_name_list = []
-        city_name_result_list = self.page.query_selector_all(Search().search_job.city_list)
-        for index, city_name_result in enumerate(city_name_result_list):
-            if city_name == city_name_result.text_content():
-                city_name_list.append(index)
-        return city_name_list
+        else:
+            logger.info('【下一页不可见】')
+            return False
 
-    def find_area_of_city(self, area_name: str) -> list:
-        """
-        顶部查询城市对应下的区域
-        :param area_name:
-        :return:
-        """
-        rea_of_city_list = []
-        area_of_city_result_list = self.page.query_selector_all(Search().search_job.area_of_city)
-        for index, area_of_city_result in enumerate(area_of_city_result_list):
-            if area_name == area_of_city_result.text_content():
-                rea_of_city_list.append(index)
-        return rea_of_city_list
+    def goToPreviousSearchPage(self):
+        current_url = copy.deepcopy(self.page.url)
+        logger.info('【点击上一页】')
+        if self.page.locator(Search().search_job.previous_page_button).is_visible():
+            logger.info('【上一页按钮可见】')
+            logger.info('【点击上一页】')
+            self.page.locator(Search().search_job.previous_page_button).click()
+            logger.info(f'【当前页面UR】L:{self.page.url}')
+            logger.info('【点击完成】')
+            if current_url == self.page.url:
+                logger.info('【已经到头啦】')
+                return False
+            return True
+        else:
+            logger.info('【上一页不可见】')
+            return False
 
-    def find_page_count(self):
-        return len(self.page.query_selector_all(Search().search_job.search_page))
+    def start(self):
+        while self.chatWithOnLineHR():
+            if not self.goToNextSearchPage():
+                break
+            time.sleep(2)
 
-    def click_city(self):
-        pass
-
-    def click_area_of_city(self):
-        pass
-
-    def click_job_card(self, index: [list[int, str], int, str], pause_time: [int] = 8000):
-        """
-
-        :param index:
-        :param pause_time:点击后停留的时长,单位毫秒,默认8秒
-        :return:
-        """
-
-        if isinstance(index, (int, str)):
-            index = '[' + str(index) + ']'
-            element = Search().search_job.search_result_list + '/li' + index
-            self.page.click(element)
-            self.page.wait_for_timeout(pause_time)
-            return self.page.url, index
-
-    # def on_response(self, response):
-    #     if 'https://facade.upfluence.co/api/v1/influencers/' in response.url:
-    #         data = json.loads(response.body())
-
-    # def get_job_list_count(self, url):
-    #     self.page.on('response', on_response)
-    #     if url in self.page.url:
-    #         data = json.loads(response.body())
-    #         instagrams = data['instagrams']
-    #         username = instagrams[0]['username']
-    #         usernames.append(username)
-    #         print(set(usernames))
-    #         pass
+    def close(self):
+        self.content.close()
+        self.page.close()
 
 
 if __name__ == '__main__':
-    S = SearchJobPageOperation(url)
-    S.search()
+    R = driver()
+    S = SearchJobPageOperation(R)
+    time.sleep(3)
+    S.searchJob('软件测试工程师')
+    time.sleep(3)
+    S.start()
+    time.sleep(3)
