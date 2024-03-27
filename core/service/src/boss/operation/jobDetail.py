@@ -60,7 +60,22 @@ class JobDetailPageOperation(object):
         self.page.click(DetailPage().communication_button_again)
 
     def getJobDescribeContent(self):
-        self.page.click(DetailPage().job_describe_content)
+        return self.page.locator(DetailPage().job_describe_content).inner_text()
+
+    def getHrName(self):
+        return self.page.locator(DetailPage().hr_name).inner_text()
+
+    def getJobName(self):
+        return self.page.locator(DetailPage().hr_name).hr_position().inner_text()
+
+    def getHrActiveTime(self):
+        return self.page.locator(DetailPage().hr_name).hr_active_time().inner_text()
+
+    def getCompanyInfo(self):
+        return self.page.locator(DetailPage().hr_name).business_information_company_name().inner_text()
+
+    def getCompanyLocationAddress(self):
+        return self.page.locator(DetailPage().hr_name).company_location_address().inner_text()
 
     def pageClosed(self):
         self.page.close()
@@ -75,4 +90,4 @@ if __name__ == '__main__':
 
     J = JobDetailPageOperation(R)
     J.gotoJobDetailPage(url=url)
-    J.checkButtonText()
+    print(J.getJobDescribeContent())

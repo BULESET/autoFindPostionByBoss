@@ -20,9 +20,10 @@ class JobDetail(object):
 class CompanyInfo(object):
     company_brief_introduction_content = '//*[@id="main"]/div[3]/div/div[2]/div[4]/div[1]/div'
     company_more_button = '//*[@id="main"]/div[3]/div/div[2]/div[4]/div[1]/a'
-    business_information_company_name = ''
+    business_information_company_name = '//*[@id="main"]/div[3]/div/div[2]/div[4]/div[2]/div/ul/li[1]'
     business_information_company_legal_representative = ''
     business_information_company_start_time = ''
+    company_location_address = '//*[@id="main"]/div[3]/div/div[2]/div[4]/div[3]/div/div[1]'
 
 
 class DetailPage(JobDetail, CompanyInfo):
