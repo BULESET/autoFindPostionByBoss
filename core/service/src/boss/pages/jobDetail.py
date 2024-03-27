@@ -2,7 +2,7 @@
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
 # @File :       jobDetail.py
-# @Project :    PositionRecommend
+# @Project :    autoFindPositionByBoss
 # @Description:
 
 class JobDetail(object):

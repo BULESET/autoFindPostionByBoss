@@ -2,7 +2,7 @@
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
 # @File :       login.py
-# @Project :    PositionRecommend
+# @Project :    autoFindPositionByBoss
 # @Description:
 
 class LoginPage(object):

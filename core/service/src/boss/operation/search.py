@@ -2,7 +2,7 @@
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
 # @File :       search.py
-# @Project :    PositionRecommend
+# @Project :    autoFindPositionByBoss
 # @Description:
 import time
 
@@ -19,8 +19,9 @@ import os
 
 class SearchJobPageOperation(object):
     url = 'https://www.zhipin.com/web/geek/job'
-    current_path = os.path.dirname(os.path.abspath('.'))
+    current_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tmp_path = os.path.join(current_path, 'tmpFile', 'login_data.json')
+
 
     def __init__(self, browser, chatWithHRAgain=False, content=None, page=None):
         """
@@ -30,6 +31,7 @@ class SearchJobPageOperation(object):
         :param content: 上下文实例
         :param page: page实例
         """
+
         if not checkoutLoginFile():
             self.login_instance = LoginPageOperation(browser)
             self.login_instance.login_by_qr_code()
@@ -124,6 +126,7 @@ class SearchJobPageOperation(object):
 
 
 if __name__ == '__main__':
+    pass
     R = driver()
     S = SearchJobPageOperation(R)
     time.sleep(3)

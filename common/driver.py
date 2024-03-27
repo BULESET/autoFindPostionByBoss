@@ -2,7 +2,7 @@
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
 # @File :       driver.py
-# @Project :    PositionRecommend
+# @Project :    autoFindPositionByBoss
 # @Description:
 
 from playwright.sync_api import sync_playwright

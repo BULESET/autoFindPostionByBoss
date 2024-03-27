@@ -2,7 +2,7 @@
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
 # @File :       login.py
-# @Project :    PositionRecommend
+# @Project :    autoFindPositionByBoss
 # @Description:
 import loguru
 
@@ -16,7 +16,7 @@ next_url = 'https://www.zhipin.com/web/geek/job-recommend'
 
 
 class LoginPageOperation(object):
-    current_path = os.path.dirname(os.path.abspath('.'))
+    current_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tmp_path = os.path.join(current_path, 'tmpFile')
 
     def __init__(self, browser):
@@ -75,5 +75,7 @@ class LoginPageOperation(object):
 
 if __name__ == '__main__':
     R = driver()
-    L = LoginPageOperation(browser=R)
-    L.login_by_qr_code()
+    L = LoginPageOperation()
+
+    # L = LoginPageOperation(browser=R)
+    # L.login_by_qr_code()

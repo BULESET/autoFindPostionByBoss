@@ -2,11 +2,16 @@
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
 # @File :       tools.py
-# @Project :    PositionRecommend
+# @Project :    autoFindPositionByBoss
 # @Description:
 import os
 
-current_path = os.path.dirname(os.path.abspath('.'))
+#
+# current_path = os.path.dirname(os.path.abspath('.'))
+# login_data_path = os.path.join(current_path, 'tmpFile')
+# path = os.path.dirname(__file__)
+# pas = os.path.abspath(__file__)
+current_path = os.path.dirname(os.path.dirname(__file__))
 login_data_path = os.path.join(current_path, 'tmpFile')
 
 
@@ -18,12 +23,13 @@ def checkoutLoginFile():
         return False
 
 
-def deleteLoginFile():
-    loginFilePath = os.path.join(login_data_path, 'login_data.json')
-    os.remove(loginFilePath)
+# def deleteLoginFile():
+#     loginFilePath = os.path.join(login_data_path, 'login_data.json')
+#     os.remove(loginFilePath)
 
 
 if __name__ == '__main__':
-    if not checkoutLoginFile():
-        pass
-
+    print(login_data_path)
+    print(current_path)
+    # print(path)
+    # print(pas)

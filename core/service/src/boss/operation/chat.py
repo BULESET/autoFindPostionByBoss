@@ -2,7 +2,7 @@
 # @Author :     sunyong
 # @Email :      sunyong@avic-intl.cn
 # @File :       chat.py
-# @Project :    PositionRecommend
+# @Project :    autoFindPositionByBoss
 # @Description:
 
 import time
@@ -18,7 +18,7 @@ import os
 
 class ChatWithHRListBase(object):
     chat_url = 'https://www.zhipin.com/web/geek/chat'
-    current_path = os.path.dirname(os.path.abspath('.'))
+    current_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tmp_path = os.path.join(current_path, 'tmpFile', 'login_data.json')
 
     def __init__(self, browser, content=None, page=None):
