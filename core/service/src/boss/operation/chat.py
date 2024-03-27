@@ -161,7 +161,6 @@ class ChatWithHROperation(ChatWithHRPopupWindowOperation, ChatWithHRListOperatio
         if self.dialog_status:
             logger.info(f'【dialog_status参数为{self.dialog_status}弹窗存在')
             self.send_message()
-            pass
         else:
             logger.info(f'【dialog_status参数为{self.dialog_status}弹窗不存在')
             self.selectChatList(select_index)
