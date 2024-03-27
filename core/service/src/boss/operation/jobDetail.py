@@ -50,8 +50,8 @@ class JobDetailPageOperation(object):
 
         else:
             self.page.click(DetailPage().communication_button)
-            ChatWithHROperation(self.browser, self.content, self.page).send_common_message()
-            ChatWithHROperation(self.browser, self.content, self.page).close(closePopupPage=False)
+            ChatWithHROperation(self.browser, self.content, self.page).send_message()
+            ChatWithHROperation(self.browser, self.content, self.page).close(closePopupPage=True)
 
     def checkButtonText(self):
         return self.page.locator(DetailPage().communication_button).inner_text()

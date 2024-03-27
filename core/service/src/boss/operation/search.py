@@ -22,7 +22,14 @@ class SearchJobPageOperation(object):
     current_path = os.path.dirname(os.path.abspath('.'))
     tmp_path = os.path.join(current_path, 'tmpFile', 'login_data.json')
 
-    def __init__(self, browser, content=None, page=None):
+    def __init__(self, browser, chatWithHRAgain=False, content=None, page=None):
+        """
+
+        :param browser: 浏览器实例
+        :param chatWithHRAgain: 是否和已经聊过的继续聊,否的话是不在继续和已经聊过的hr聊天，是的话继续和已经聊过天的HR聊天
+        :param content: 上下文实例
+        :param page: page实例
+        """
         if not checkoutLoginFile():
             self.login_instance = LoginPageOperation(browser)
             self.login_instance.login_by_qr_code()
@@ -42,6 +49,8 @@ class SearchJobPageOperation(object):
                 self.content = content
                 self.page = page
 
+        self.chatWithHRAgain = chatWithHRAgain
+
     def goToSearchPage(self):
         self.page.goto(url=self.url)
         self.page.wait_for_url(self.url)
@@ -60,9 +69,8 @@ class SearchJobPageOperation(object):
                     job_detail_page = new_page_info.value
                     job_detail_page.wait_for_load_state()
                     JobDetailPageOperation(self.browser, self.content, job_detail_page).chatWithHRAtNow(
-                        chatWithHRAgain=False)
+                        chatWithHRAgain=self.chatWithHRAgain)
                 time.sleep(3)
-                break
             logger.info('【已经遍历完在线数据】')
             return True
         else:
