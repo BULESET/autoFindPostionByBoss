@@ -43,7 +43,10 @@ class JobDetailPageOperation(object):
     def gotoJobDetailPage(self, url):
         self.page.goto(url)
 
-    def chatWithHRAtNow(self, chatWithHRAgain=True):
+    def chatWithHRAtNow(self, NotChatWithCompanyList: [None, list], chatWithHRAgain=True):
+        if isinstance(NotChatWithCompanyList, (str, list)):
+            if self.getCompanyName() in NotChatWithCompanyList:
+                self.page.close()
 
         if not chatWithHRAgain and '继续沟通' == self.checkButtonText():
             self.pageClosed()
@@ -66,16 +69,26 @@ class JobDetailPageOperation(object):
         return self.page.locator(DetailPage().hr_name).inner_text()
 
     def getJobName(self):
-        return self.page.locator(DetailPage().hr_name).hr_position().inner_text()
+        return self.page.locator(DetailPage().job_name).inner_text()
 
     def getHrActiveTime(self):
-        return self.page.locator(DetailPage().hr_name).hr_active_time().inner_text()
+        return self.page.locator(DetailPage().hr_active_time).inner_text()
 
-    def getCompanyInfo(self):
-        return self.page.locator(DetailPage().hr_name).business_information_company_name().inner_text()
+    def getCompanyName(self):
+        return self.page.locator(DetailPage().business_information_company_name).inner_text()
+
+    def getJobMoney(self):
+        money = self.page.locator(DetailPage().job_money).inner_text().split('-')
+        min_money = money[0] + 'K'
+        max_money = money[1]
+        if '·' in max_money:
+            max_money = self.page.locator(DetailPage().job_money).inner_text().split('-')[1].split('·')[0]
+            return min_money, max_money
+        else:
+            return min_money, max_money
 
     def getCompanyLocationAddress(self):
-        return self.page.locator(DetailPage().hr_name).company_location_address().inner_text()
+        return self.page.locator(DetailPage().company_location_address).inner_text()
 
     def pageClosed(self):
         self.page.close()
@@ -86,8 +99,10 @@ class JobDetailPageOperation(object):
 
 if __name__ == '__main__':
     R = driver()
-    url = 'https://www.zhipin.com/job_detail/3efca81a272f420c1nxy3tu9EFpW.html?lid=WORfSsIyAJ.search.32&securityId=DvLw4a_MNZBFL-J1eL5hAfBFZ8sIGx9mYY1CaRpr18a0i0DfQ54MBV03BCY-IAqvGXWMifI-ZHsoL1_T-bikINPv1VNT65sCNBzWd5lHRiwlXfe5Smkn&sessionId='
+    url = 'https://www.zhipin.com/job_detail/8de1ae0ce596f2151nJ72t28EFJQ.html?lid=1ZbJC6KeFUa.search.59&securityId=c99ifTJJs6msM-G1zst4Q7ncx42T6hSfSP_v37NwZhUIcnf5AuuKsRIYXTHfcrl48h2gUbn9Ak1JDdR5lUL2tMw1Z1ZPL3cffSm1er35UReUIMH8&sessionId='
 
     J = JobDetailPageOperation(R)
     J.gotoJobDetailPage(url=url)
+    print(J.getJobMoney())
     print(J.getJobDescribeContent())
+    print(J.getJobName())

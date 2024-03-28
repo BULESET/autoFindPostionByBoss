@@ -22,7 +22,6 @@ class SearchJobPageOperation(object):
     current_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tmp_path = os.path.join(current_path, 'tmpFile', 'login_data.json')
 
-
     def __init__(self, browser, chatWithHRAgain=False, content=None, page=None):
         """
 
