@@ -56,7 +56,7 @@ class SearchJobPageOperation(object):
         self.page.goto(url=self.url)
         self.page.wait_for_url(self.url)
 
-    def searchJob(self, job_name):
+    def searchJob(self, job_name, **kwargs):
         self.page.fill(Search().search_job.search_box, job_name)
         self.page.click(Search().search_job.search_button)
 

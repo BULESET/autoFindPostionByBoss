@@ -43,7 +43,7 @@ class JobDetailPageOperation(object):
     def gotoJobDetailPage(self, url):
         self.page.goto(url)
 
-    def chatWithHRAtNow(self, NotChatWithCompanyList: [None, list], chatWithHRAgain=True):
+    def chatWithHRAtNow(self, NotChatWithCompanyList: [None, list] = None, chatWithHRAgain=True):
         if isinstance(NotChatWithCompanyList, (str, list)):
             if self.getCompanyName() in NotChatWithCompanyList:
                 self.page.close()
