@@ -84,6 +84,7 @@ class ChatWithHRPopupWindowOperation(ChatWithHRListBase):
 
     def __init__(self, browser, content=None, page=None):
         super().__init__(browser, content=content, page=page)
+        self.dialog_type = None
         self.dialog_status = self.checkoutDialogWindow()
 
     def checkoutDialogWindow(self):
@@ -94,15 +95,23 @@ class ChatWithHRPopupWindowOperation(ChatWithHRListBase):
             return False
         if self.page.locator(ChatPage().pop_up_window).is_visible():
             logger.info('【聊天弹窗存在】')
+            self.dialog_type = 'chat_window'
+            return True
+        if self.page.locator(ChatPage().pop_up_window_unable_to_communicate).is_visible():
+            logger.info('【今日聊天次数已达到上限】')
+            self.dialog_type = 'unable_chat_window'
             return True
         else:
             logger.info('【聊天弹窗不存在】')
             return False
 
     def closePopupWindow(self):
-        if self.dialog_status:
+        if self.dialog_status and self.dialog_type == 'chat_window':
             logger.info('【关闭聊天弹窗】')
             self.page.locator(ChatPage().pop_up_window_close_button).click()
+        if self.dialog_status and self.dialog_type == 'unable_chat_window':
+            logger.info('【关闭不能聊天弹窗】')
+            self.page.locator(ChatPage().pop_up_window_unable_to_communicate_confirm_button).click()
 
     def input_message_in_pop_window(self, message):
         self.page.locator(ChatPage().pop_up_window_close_input_box).fill(message)
@@ -142,25 +151,28 @@ class ChatWithHROperation(ChatWithHRPopupWindowOperation, ChatWithHRListOperatio
         :return:
         """
         if self.dialog_status:
-            logger.info(f'【dialog_status参数为{self.dialog_status}弹窗存在')
+            logger.info(f'【dialog_status参数为{self.dialog_status}弹窗存在】')
             if not closePopupPage:
-                logger.info(f'【closePopupPage参数为{closePopupPage}关闭聊天弹窗')
+                logger.info(f'【closePopupPage参数为{closePopupPage}关闭聊天弹窗】')
                 self.closePopupWindow()
             else:
-                logger.info(f'【closePopupPage参数为{closePopupPage}关闭聊天弹窗')
+                logger.info(f'【closePopupPage参数为{closePopupPage}关闭聊天弹窗】')
                 self.closePopupWindow()
-                logger.info(f'【closePopupPage参数为{closePopupPage}关闭整个页面')
+                logger.info(f'【closePopupPage参数为{closePopupPage}关闭整个页面】')
                 self.closePage()
         else:
             self.page.wait_for_url(self.chat_url)
             logger.info(f'【dialog_status参数为{self.dialog_status}弹窗不存在')
-            logger.info(f'【关闭整个聊天页面页面')
+            logger.info(f'【关闭整个聊天页面页面】')
             self.closePage()
 
     def send_common_expressions_message(self, select_index=1):
         if self.dialog_status:
-            logger.info(f'【dialog_status参数为{self.dialog_status}弹窗存在')
-            self.send_message()
+            if self.dialog_type == 'chat_window':
+                logger.info(f'【dialog_status参数为{self.dialog_status}弹窗存在')
+                self.send_message()
+            if self.dialog_type == 'unable_chat_window':
+                self.closePopupWindow()
         else:
             logger.info(f'【dialog_status参数为{self.dialog_status}弹窗不存在')
             self.selectChatList(select_index)
@@ -169,10 +181,15 @@ class ChatWithHROperation(ChatWithHRPopupWindowOperation, ChatWithHRListOperatio
     def send_message(self):
         message = '您好，看了下咱们的招聘岗位描述和我工作经历以及现有的能力比较匹配，想和您聊聊，期待您的回复~'
         if self.dialog_status:
-            logger.info('【聊天弹窗存在】')
-            logger.info(f'【点击聊天弹窗并输入打招呼信息】:{message}')
-            self.input_message_in_pop_window(message=message)
-            self.send_message_in_pop_window()
+            if self.dialog_type == 'chat_window':
+                logger.info(f'【dialog_status参数为{self.dialog_status}弹窗存在')
+                logger.info('【聊天弹窗存在】')
+                logger.info(f'【点击聊天弹窗并输入打招呼信息】:{message}')
+                self.input_message_in_pop_window(message=message)
+                self.send_message_in_pop_window()
+            if self.dialog_type == 'unable_chat_window':
+                pass
+
         else:
             logger.info('【聊天弹窗不存在,当前页面为聊天页面】')
             logger.info(f'【点击聊天弹窗并输入打招呼信息】:{message}')

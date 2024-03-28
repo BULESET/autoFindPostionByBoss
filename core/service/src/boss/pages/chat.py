@@ -39,6 +39,10 @@ class ChatListDetail(ChatCommonExpressionsPopupWindow):
 
 
 class ChatWithHRPopupWindow(object):
+    pop_up_window_unable_to_communicate = 'body > div.dialog-wrap.greet-pop > div.dialog-container'
+    pop_up_window_unable_to_communicate_title = 'body > div.dialog-wrap.greet-pop > div.dialog-container > div.dialog-title'
+    pop_up_window_unable_to_communicate_text = 'body > div.dialog-wrap.greet-pop > div.dialog-container > div.dialog-con'
+    pop_up_window_unable_to_communicate_confirm_button = 'body > div.dialog-wrap.greet-pop > div.dialog-container > div.dialog-footer > div > span'
     pop_up_window = 'body > div.dialog-wrap.startchat-dialog > div.dialog-container'
     pop_up_window_close_button = 'body > div.dialog-wrap.startchat-dialog > div.dialog-container > div.dialog-title > a > i'
     pop_up_window_close_input_box = 'body > div.dialog-wrap.startchat-dialog > div.dialog-container > div.dialog-con > div > div.left > div.edit-area > textarea'

@@ -72,6 +72,7 @@ class SearchJobPageOperation(object):
                     job_detail_page.wait_for_load_state()
                     JobDetailPageOperation(self.browser, self.content, job_detail_page).chatWithHRAtNow(
                         chatWithHRAgain=self.chatWithHRAgain)
+                    # break
                 time.sleep(3)
             logger.info('【已经遍历完在线数据】')
             return True
@@ -97,6 +98,10 @@ class SearchJobPageOperation(object):
             logger.info('【下一页不可见】')
             return False
 
+    def goFirstSearchPage(self):
+        logger.info('【点击第一页】')
+        self.page.locator(Search().search_job.first_page_button).click()
+
     def goToPreviousSearchPage(self):
         current_url = copy.deepcopy(self.page.url)
         logger.info('【点击上一页】')
@@ -117,7 +122,8 @@ class SearchJobPageOperation(object):
     def start(self):
         while self.chatWithOnLineHR():
             if not self.goToNextSearchPage():
-                break
+                time.sleep(2)
+                self.goFirstSearchPage()
             time.sleep(2)
 
     def close(self):
@@ -130,7 +136,13 @@ if __name__ == '__main__':
     R = driver()
     S = SearchJobPageOperation(R)
     time.sleep(3)
-    S.searchJob('软件测试工程师')
+    S.goToNextSearchPage()
     time.sleep(3)
-    S.start()
+    S.goFirstSearchPage()
     time.sleep(3)
+
+    # time.sleep(3)
+    # S.searchJob('软件测试工程师')
+    # time.sleep(3)
+    # S.start()
+    # time.sleep(3)

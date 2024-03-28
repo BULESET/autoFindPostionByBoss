@@ -19,6 +19,7 @@ class SearchResultList(object):
     salary = '//*[@id="wrap"]/div[2]/div[2]/div/div[1]/div[1]/ul/li[index]/div[1]/a/div[2]/span'
     next_page_button = '.options-pages >> .ui-icon-arrow-right'
     previous_page_button = '.options-pages >> .ui-icon-arrow-left'
+    first_page_button = '#wrap > div.page-job-wrapper > div.page-job-inner > div > div.job-list-wrapper > div.search-job-result > div > div > div > a:nth-child(2)'
 
     c = 'options-pages'
 
