@@ -17,6 +17,9 @@ class SearchResultList(object):
     company_tag_list = '//div[@class="page-job-inner"]//div[@class="page-job-content clearfix"]//div[@class="job-list-wrapper"]//div[@class="search-job-result"]//div[@class="job-card-body clearfix"]//div[@class="job-card-right"]//div[@class="company-info"]//ul[@class="company-tag-list"]'
     search_page = '//*[@id="wrap"]/div[2]/div[2]/div/div[1]/div[1]/div/div/div/a'
     salary = '//*[@id="wrap"]/div[2]/div[2]/div/div[1]/div[1]/ul/li[index]/div[1]/a/div[2]/span'
+    not_limit_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[1]'
+    under_3k_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[2]'
+    between_3k_to_5k_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[3]'
     next_page_button = '.options-pages >> .ui-icon-arrow-right'
     previous_page_button = '.options-pages >> .ui-icon-arrow-left'
     first_page_button = '#wrap > div.page-job-wrapper > div.page-job-inner > div > div.job-list-wrapper > div.search-job-result > div > div > div > a:nth-child(2)'
@@ -36,6 +39,14 @@ class SearchCondition(object):
     area_select_button = '//*[@id="wrap"]/div[2]/div[1]/div[1]/div/span'
     city_list = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[1]/div[2]/div[1]/ul/li'
     area_of_city = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[1]/div[2]/div[1]/ul/li'
+    select_money_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[1]/span'
+    not_limit_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[1]'
+    under_3k_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[2]'
+    between_3k_to_5k_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[3]'
+    between_5k_to_10k_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[4]'
+    between_10k_to_20k_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[5]'
+    between_20k_to_50k_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[6]'
+    up_50k_button = '//*[@id="wrap"]/div[2]/div[1]/div[2]/div[6]/div[2]/ul/li[7]'
 
 
 class SearchJob(SearchCondition, SearchResultList):

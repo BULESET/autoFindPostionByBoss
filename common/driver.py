@@ -14,7 +14,9 @@ from loguru import logger
 
 def driver():
     playwright = sync_playwright().start()
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=False,
+                                         args=['--start-maximized', '--disable-blink-features=AutomationControlled'])
+
     return browser
 
 

@@ -21,7 +21,7 @@ class LoginPageOperation(object):
 
     def __init__(self, browser):
         self.browser = browser
-        self.content = browser.new_context()
+        self.content = browser.new_context(no_viewport=True)
         self.page = self.content.new_page()
 
     def _send_sms_code(self, phone_number: str):

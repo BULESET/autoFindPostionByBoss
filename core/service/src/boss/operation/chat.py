@@ -32,7 +32,7 @@ class ChatWithHRListBase(object):
         else:
             if not browser.contexts:
                 self.content = browser.new_context(storage_state=self.tmp_path)
-                self.page = self.content.new_page()
+                self.page = self.content.new_page(no_viewport=True)
 
             else:
                 self.browser = browser
@@ -188,7 +188,7 @@ class ChatWithHROperation(ChatWithHRPopupWindowOperation, ChatWithHRListOperatio
                 self.input_message_in_pop_window(message=message)
                 self.send_message_in_pop_window()
             if self.dialog_type == 'unable_chat_window':
-                pass
+                return 'unable_chat_today'
 
         else:
             logger.info('【聊天弹窗不存在,当前页面为聊天页面】')

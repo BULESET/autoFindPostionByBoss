@@ -21,6 +21,7 @@ class SearchJobPageOperation(object):
     url = 'https://www.zhipin.com/web/geek/job'
     current_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tmp_path = os.path.join(current_path, 'tmpFile', 'login_data.json')
+    js = "const js = `Object.defineProperty(navigator, 'webdriver', {get: () => undefined})`;"
 
     def __init__(self, browser, chatWithHRAgain=False, content=None, page=None):
         """
@@ -37,27 +38,33 @@ class SearchJobPageOperation(object):
             self.browser = browser
             self.content = self.login_instance.content
             self.page = self.login_instance.page
+            self.page.evaluate(self.js)
             self.goToSearchPage()
 
         else:
             if not browser.contexts:
                 self.browser = browser
-                self.content = browser.new_context(storage_state=self.tmp_path)
+                self.content = browser.new_context(storage_state=self.tmp_path, no_viewport=True)
                 self.page = self.content.new_page()
+                self.page.evaluate(self.js)
                 self.goToSearchPage()
             else:
                 self.browser = browser
                 self.content = content
                 self.page = page
+                self.page.evaluate(self.js)
 
         self.chatWithHRAgain = chatWithHRAgain
+        self.send_message_status = None
 
     def goToSearchPage(self):
         self.page.goto(url=self.url)
         self.page.wait_for_url(self.url)
 
-    def searchJob(self, job_name, **kwargs):
+    def searchJob(self, job_name: [list, str], **kwargs):
+        logger.info('【开始输入岗位名称】')
         self.page.fill(Search().search_job.search_box, job_name)
+        logger.info('【开始搜索岗位】')
         self.page.click(Search().search_job.search_button)
 
     def chatWithOnLineHR(self):
@@ -69,32 +76,31 @@ class SearchJobPageOperation(object):
                     on_line_hr.click()
                     job_detail_page = new_page_info.value
                     job_detail_page.wait_for_load_state()
-                    JobDetailPageOperation(self.browser, self.content, job_detail_page).chatWithHRAtNow(
+                    self.send_message_status = JobDetailPageOperation(self.browser, self.content,
+                                                                      job_detail_page).chatWithHRAtNow(
                         chatWithHRAgain=self.chatWithHRAgain)
-                    # break
-                time.sleep(3)
+
             logger.info('【已经遍历完在线数据】')
             return True
         else:
-            logger.info('【已经遍历完在线数据】')
+            logger.info('【当前页面没有HR在线】')
             return True
 
     def goToNextSearchPage(self):
         current_url = copy.deepcopy(self.page.url)
-        logger.info('【点击下一页】')
         if self.page.locator(Search().search_job.next_page_button).is_visible():
             logger.info('【下一页按钮可见】')
             logger.info('【点击下一页】')
             self.page.locator(Search().search_job.next_page_button).click()
-            logger.info(f'【当前页面UR】L:{self.page.url}')
-            logger.info('【点击完成】')
+            logger.info('【下一页按钮点击完成】')
+            logger.info(f'【当前页面URL】:{self.page.url}')
             if current_url == self.page.url:
                 logger.info('【已经到头啦】')
                 return False
             return True
 
         else:
-            logger.info('【下一页不可见】')
+            logger.info('【下一页按钮不可见】')
             return False
 
     def goFirstSearchPage(self):
@@ -118,12 +124,49 @@ class SearchJobPageOperation(object):
             logger.info('【上一页不可见】')
             return False
 
-    def start(self):
-        while self.chatWithOnLineHR():
-            if not self.goToNextSearchPage():
-                time.sleep(2)
-                self.goFirstSearchPage()
-            time.sleep(2)
+    def start(self, job_name: [list, str], **kwargs):
+        logger.info(f'【入参职位名称为:{job_name}】')
+        if isinstance(job_name, str):
+            logger.info(f'【需要搜索的职位名称为:{job_name}】')
+            time.sleep(3)
+            self.searchJob(job_name)
+            time.sleep(4)
+            while self.chatWithOnLineHR():
+                time.sleep(4)
+                if self.send_message_status == 'unable_chat_today':
+                    break
+                if not self.goToNextSearchPage():
+                    time.sleep(3)
+                    break
+
+        if isinstance(job_name, list) and len(job_name) == 1:
+            logger.info(f'【需要搜索的职位名称为:{job_name}】')
+            time.sleep(3)
+            self.searchJob(job_name[0])
+            time.sleep(4)
+            while self.chatWithOnLineHR():
+                time.sleep(4)
+                if self.send_message_status == 'unable_chat_today':
+                    break
+                if not self.goToNextSearchPage():
+                    time.sleep(3)
+                    break
+
+        #
+        if isinstance(job_name, list):
+            for job in job_name:
+                logger.info(f'【需要搜索的职位名称为:{job}】')
+                time.sleep(4)
+                self.searchJob(job)
+                time.sleep(4)
+                while self.chatWithOnLineHR():
+                    time.sleep(4)
+                    if not self.goToNextSearchPage():
+                        time.sleep(4)
+                        break
+                if self.send_message_status == 'unable_chat_today':
+                    break
+        self.start(job_name)
 
     def close(self):
         self.content.close()
@@ -134,14 +177,5 @@ if __name__ == '__main__':
     pass
     R = driver()
     S = SearchJobPageOperation(R)
+    S.start(job_name=['移动端测试工程师', '软件测试工程师', '自动化测试工程师'])
     time.sleep(3)
-    S.goToNextSearchPage()
-    time.sleep(3)
-    S.goFirstSearchPage()
-    time.sleep(3)
-
-    # time.sleep(3)
-    # S.searchJob('软件测试工程师')
-    # time.sleep(3)
-    # S.start()
-    # time.sleep(3)

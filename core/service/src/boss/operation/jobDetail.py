@@ -32,7 +32,7 @@ class JobDetailPageOperation(object):
         else:
             if not browser.contexts:
                 self.browser = browser
-                self.content = browser.new_context(storage_state=self.tmp_path)
+                self.content = browser.new_context(storage_state=self.tmp_path,no_viewport=True)
                 self.page = self.content.new_page()
 
             else:
@@ -53,8 +53,12 @@ class JobDetailPageOperation(object):
 
         else:
             self.page.click(DetailPage().communication_button)
-            ChatWithHROperation(self.browser, self.content, self.page).send_message()
+            send_status = ChatWithHROperation(self.browser, self.content, self.page).send_message()
             ChatWithHROperation(self.browser, self.content, self.page).close(closePopupPage=True)
+            return send_status
+
+    def getJobInfo(self):
+        pass
 
     def checkButtonText(self):
         return self.page.locator(DetailPage().communication_button).inner_text()
