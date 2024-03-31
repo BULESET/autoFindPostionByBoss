@@ -64,8 +64,10 @@ class SearchJobPageOperation(object):
     def searchJob(self, job_name: [list, str], **kwargs):
         logger.info('【开始输入岗位名称】')
         self.page.fill(Search().search_job.search_box, job_name)
+        self.page.mouse.click(800, 1200)
         for key, value in kwargs.items():
             if key == 'salary':
+                self.page.locator(Search().search_job.select_money_button).scroll_into_view_if_needed()
                 if value == ' not_limit':
                     self.page.click(Search().search_job.select_money_button)
                     self.page.click(Search().search_job.not_limit_button)
@@ -164,6 +166,7 @@ class SearchJobPageOperation(object):
                     break
                 if not self.goToNextSearchPage():
                     time.sleep(3)
+                    # self.goFirstSearchPage()
                     break
 
         if isinstance(job_name, list) and len(job_name) == 1:
@@ -177,6 +180,7 @@ class SearchJobPageOperation(object):
                     break
                 if not self.goToNextSearchPage():
                     time.sleep(3)
+                    # self.goFirstSearchPage()
                     break
 
         #
@@ -190,6 +194,7 @@ class SearchJobPageOperation(object):
                     time.sleep(4)
                     if not self.goToNextSearchPage():
                         time.sleep(4)
+                        # self.goFirstSearchPage()
                         break
                 if self.send_message_status == 'unable_chat_today':
                     break
@@ -235,5 +240,5 @@ if __name__ == '__main__':
 
     R = driver()
     S = SearchJobPageOperation(R)
-    S.start(job_name=['移动端测试工程师', '软件测试工程师', '自动化测试工程师'], salary='between_10k_to_20k')
+    S.start(job_name=['移动端测试工程师', '自动化测试工程师'], salary='between_10k_to_20k')
     time.sleep(3)
