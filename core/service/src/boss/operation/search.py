@@ -64,6 +64,33 @@ class SearchJobPageOperation(object):
     def searchJob(self, job_name: [list, str], **kwargs):
         logger.info('【开始输入岗位名称】')
         self.page.fill(Search().search_job.search_box, job_name)
+        for key, value in kwargs.items():
+            if key == 'salary':
+                if value == ' not_limit':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.not_limit_button)
+                if value == 'under_3k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.under_3k_button)
+                if value == ' between_3k_to_5k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.between_3k_to_5k_button)
+
+                if value == ' between_5k_to_10k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.between_5k_to_10k_button)
+
+                if value == 'between_10k_to_20k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.between_10k_to_20k_button)
+
+                if value == 'between_20k_to_50k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.between_20k_to_50k_button)
+
+                if value == 'between_20k_to_50k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.up_50k)
         logger.info('【开始搜索岗位】')
         self.page.click(Search().search_job.search_button)
 
@@ -129,7 +156,7 @@ class SearchJobPageOperation(object):
         if isinstance(job_name, str):
             logger.info(f'【需要搜索的职位名称为:{job_name}】')
             time.sleep(3)
-            self.searchJob(job_name)
+            self.searchJob(job_name, **kwargs)
             time.sleep(4)
             while self.chatWithOnLineHR():
                 time.sleep(4)
@@ -142,7 +169,7 @@ class SearchJobPageOperation(object):
         if isinstance(job_name, list) and len(job_name) == 1:
             logger.info(f'【需要搜索的职位名称为:{job_name}】')
             time.sleep(3)
-            self.searchJob(job_name[0])
+            self.searchJob(job_name[0], **kwargs)
             time.sleep(4)
             while self.chatWithOnLineHR():
                 time.sleep(4)
@@ -157,7 +184,7 @@ class SearchJobPageOperation(object):
             for job in job_name:
                 logger.info(f'【需要搜索的职位名称为:{job}】')
                 time.sleep(4)
-                self.searchJob(job)
+                self.searchJob(job, **kwargs)
                 time.sleep(4)
                 while self.chatWithOnLineHR():
                     time.sleep(4)
@@ -166,7 +193,7 @@ class SearchJobPageOperation(object):
                         break
                 if self.send_message_status == 'unable_chat_today':
                     break
-        self.start(job_name)
+        self.start(job_name, **kwargs)
 
     def close(self):
         self.content.close()
@@ -174,8 +201,39 @@ class SearchJobPageOperation(object):
 
 
 if __name__ == '__main__':
-    pass
+    '''
+         if key == 'salary':
+                if value == ' not_limit':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.not_limit_button)
+                if value == 'under_3k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.under_3k_button)
+                if value == ' between_3k_to_5k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.between_3k_to_5k_button)
+
+                if value == ' between_5k_to_10k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.between_5k_to_10k_button)
+
+                if value == 'between_10k_to_20k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.between_10k_to_20k_button)
+
+                if value == 'between_20k_to_50k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.between_20k_to_50k_button)
+
+                if value == 'between_20k_to_50k':
+                    self.page.click(Search().search_job.select_money_button)
+                    self.page.click(Search().search_job.up_50k)
+                
+    以上薪资可非选择的范围的value
+                
+                '''
+
     R = driver()
     S = SearchJobPageOperation(R)
-    S.start(job_name=['移动端测试工程师', '软件测试工程师', '自动化测试工程师'])
+    S.start(job_name=['移动端测试工程师', '软件测试工程师', '自动化测试工程师'], salary='between_10k_to_20k')
     time.sleep(3)
