@@ -18,11 +18,14 @@ next_url = 'https://www.zhipin.com/web/geek/job-recommend'
 class LoginPageOperation(object):
     current_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tmp_path = os.path.join(current_path, 'tmpFile')
+    js = "Object.defineProperties(navigator, {webdriver:{get:()=>undefined}});"
+
 
     def __init__(self, browser):
         self.browser = browser
         self.content = browser.new_context(no_viewport=True)
         self.page = self.content.new_page()
+        self.page.add_init_script(self.js)
 
     def _send_sms_code(self, phone_number: str):
         logger.info(f'【{phone_number}手机号开始发送短信验证码】')

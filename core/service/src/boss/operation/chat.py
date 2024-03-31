@@ -20,6 +20,7 @@ class ChatWithHRListBase(object):
     chat_url = 'https://www.zhipin.com/web/geek/chat'
     current_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tmp_path = os.path.join(current_path, 'tmpFile', 'login_data.json')
+    js = "Object.defineProperties(navigator, {webdriver:{get:()=>undefined}});"
 
     def __init__(self, browser, content=None, page=None):
         if not checkoutLoginFile():
@@ -28,16 +29,21 @@ class ChatWithHRListBase(object):
             self.content = self.login_instance.content
             self.browser = browser
             self.page = self.login_instance.page
+            self.page.add_init_script(self.js)
+
 
         else:
             if not browser.contexts:
                 self.content = browser.new_context(storage_state=self.tmp_path)
                 self.page = self.content.new_page(no_viewport=True)
+                self.page.add_init_script(self.js)
+
 
             else:
                 self.browser = browser
                 self.content = content
                 self.page = page
+                self.page.add_init_script(self.js)
 
 
 class ChatWithHRListOperation(ChatWithHRListBase):

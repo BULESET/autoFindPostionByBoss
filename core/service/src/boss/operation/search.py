@@ -21,7 +21,7 @@ class SearchJobPageOperation(object):
     url = 'https://www.zhipin.com/web/geek/job'
     current_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tmp_path = os.path.join(current_path, 'tmpFile', 'login_data.json')
-    js = "const js = `Object.defineProperty(navigator, 'webdriver', {get: () => undefined})`;"
+    js = "Object.defineProperties(navigator, {webdriver:{get:()=>undefined}});"
 
     def __init__(self, browser, chatWithHRAgain=False, content=None, page=None):
         """
@@ -38,7 +38,7 @@ class SearchJobPageOperation(object):
             self.browser = browser
             self.content = self.login_instance.content
             self.page = self.login_instance.page
-            self.page.evaluate(self.js)
+            self.page.add_init_script(self.js)
             self.goToSearchPage()
 
         else:
@@ -46,13 +46,13 @@ class SearchJobPageOperation(object):
                 self.browser = browser
                 self.content = browser.new_context(storage_state=self.tmp_path, no_viewport=True)
                 self.page = self.content.new_page()
-                self.page.evaluate(self.js)
+                self.page.add_init_script(self.js)
                 self.goToSearchPage()
             else:
                 self.browser = browser
                 self.content = content
                 self.page = page
-                self.page.evaluate(self.js)
+                self.page.add_init_script(self.js)
 
         self.chatWithHRAgain = chatWithHRAgain
         self.send_message_status = None
@@ -65,6 +65,8 @@ class SearchJobPageOperation(object):
         logger.info('【开始输入岗位名称】')
         self.page.fill(Search().search_job.search_box, job_name)
         self.page.mouse.click(800, 1200)
+        logger.info('【开始搜索岗位】')
+        self.page.click(Search().search_job.search_button)
         for key, value in kwargs.items():
             if key == 'salary':
                 self.page.locator(Search().search_job.select_money_button).scroll_into_view_if_needed()
@@ -93,8 +95,8 @@ class SearchJobPageOperation(object):
                 if value == 'between_20k_to_50k':
                     self.page.click(Search().search_job.select_money_button)
                     self.page.click(Search().search_job.up_50k_button)
-        logger.info('【开始搜索岗位】')
-        self.page.click(Search().search_job.search_button)
+        # logger.info('【开始搜索岗位】')
+        # self.page.click(Search().search_job.search_button)
 
     def chatWithOnLineHR(self):
         logger.info('【开始遍历完在线数据】')
