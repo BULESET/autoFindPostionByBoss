@@ -92,7 +92,7 @@ class SearchJobPageOperation(object):
 
                 if value == 'between_20k_to_50k':
                     self.page.click(Search().search_job.select_money_button)
-                    self.page.click(Search().search_job.up_50k)
+                    self.page.click(Search().search_job.up_50k_button)
         logger.info('【开始搜索岗位】')
         self.page.click(Search().search_job.search_button)
 
