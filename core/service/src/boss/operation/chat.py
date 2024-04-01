@@ -11,7 +11,6 @@ from core.service.src.boss.pages.chat import ChatPage
 from core.service.src.boss.utils.tools import checkoutLoginFile
 from core.service.src.boss.operation.login import LoginPageOperation
 from common.driver import driver
-from common.driver import driver
 from loguru import logger
 import os
 

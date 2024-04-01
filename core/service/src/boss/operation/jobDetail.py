@@ -21,7 +21,6 @@ class JobDetailPageOperation(object):
     tmp_path = os.path.join(current_path, 'tmpFile', 'login_data.json')
     js = "Object.defineProperties(navigator, {webdriver:{get:()=>undefined}});"
 
-
     def __init__(self, browser, content=None, page=None):
 
         if not checkoutLoginFile():
@@ -35,10 +34,9 @@ class JobDetailPageOperation(object):
         else:
             if not browser.contexts:
                 self.browser = browser
-                self.content = browser.new_context(storage_state=self.tmp_path,no_viewport=True)
+                self.content = browser.new_context(storage_state=self.tmp_path, no_viewport=True)
                 self.page = self.content.new_page()
                 self.page.add_init_script(self.js)
-
 
             else:
                 self.browser = browser
